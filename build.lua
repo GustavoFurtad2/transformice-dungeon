@@ -14,6 +14,6 @@ function build(files)
     build:write(content)
 end
 
-build({"init", "player", "events"})
+build({"init", "arena", "player", "events"})
 
 return
