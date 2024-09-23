@@ -9,29 +9,31 @@ local function Player(name)
 
         isDead     = false,
 
-        inArena    = false,
-        inDuelList = false,
-
-        backpack   = {},
+        backpack   = {
+            items.sword
+        },
 
         hotbar     = {}
     }
 
-    instance.hotbar[1] = instance.backpack[1] or {name = "error"}
-    instance.hotbar[2] = instance.backpack[2] or {name = "error"}
-    instance.hotbar[3] = instance.backpack[3] or {name = "error"}
+    instance.hotbar[1] = instance.backpack[1]
 
-    function instance:lobby()
+    if currentGameState == gameStates.lobby then
 
-        ui.addTextArea(1, "<a href='event:enterArena'><p align='center'>Arena</p></a>", name, 200, 31800, 80, 20, 0xf, 0xf, 1, false)
-        ui.addTextArea(2, "<a href='event:enterDungeon'><p align='center'>Dungeon</p></a>", name, 540, 31800, 80, 20, 0xf, 0xf, 1, false)
+        tfm.exec.respawnPlayer(name)
+        showPlayerList(name)
     end
 
     function instance:showHotbar()
 
         ui.addTextArea(11, self.hotbar[1].name, name, 10, 345, 50, 50, nil, 0xf, 1, true)
-        ui.addTextArea(12, self.hotbar[2].name, name, 75, 345, 50, 50, nil, 0xf, 1, true)
-        ui.addTextArea(13, self.hotbar[3].name, name, 140, 345, 50, 50, nil, 0xf, 1, true)
+        
+        if self.hotbar[2] then
+            ui.addTextArea(12, self.hotbar[2].name, name, 75, 345, 50, 50, nil, 0xf, 1, true)
+        end
+        if self.hotbar[3] then
+            ui.addTextArea(13, self.hotbar[3].name, name, 140, 345, 50, 50, nil, 0xf, 1, true)
+        end
     end
 
     function instance:killPlayer()
