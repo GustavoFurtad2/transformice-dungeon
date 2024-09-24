@@ -8,6 +8,7 @@ local function Player(name)
         speed      = 5,
 
         isDead     = false,
+        isPlaying  = false,
 
         backpack   = {
             items.sword
