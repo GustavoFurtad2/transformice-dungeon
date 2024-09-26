@@ -2,34 +2,86 @@ for i, v in next, {"AutoNewGame", "AutoShaman", "AfkDeath", "PhysicalConsumables
     tfm.exec["disable" .. v]()
 end
 
-tfm.exec.newGame "<C><P L='4800' H='32000' MEDATA=';;;;-0;0:::1-'/><Z><S><S T='6' X='402' Y='31972' L='800' H='54' P='0,0,0.3,0.2,0,0,0,0'/><S T='14' X='-2' Y='31773' L='10' H='347' P='0,0,0.3,0.2,0,0,0,0'/><S T='14' X='807' Y='31772' L='10' H='348' P='0,0,0.3,0.2,0,0,0,0'/><S T='14' X='402' Y='31595' L='820' H='10' P='0,0,0.3,0.2,0,0,0,0'/><S T='7' X='3000' Y='373' L='800' H='54' P='0,0,0.3,0.2,0,0,0,0'/><S T='19' X='3000' Y='453' L='1800' H='108' P='0,0,0.3,0.2,0,0,0,0' m=''/><S T='14' X='2100' Y='200' L='10' H='401' P='0,0,0.3,0.2,0,0,0,0'/><S T='14' X='3900' Y='200' L='10' H='401' P='0,0,0.3,0.2,0,0,0,0'/><S T='9' X='3000' Y='453' L='1800' H='108' P='0,0,0,0,0,0,0,0'/><S T='0' X='3000' Y='77' L='800' H='10' P='0,0,0.3,0.2,0,0,0,0'/><S T='14' X='2596' Y='39' L='10' H='76' P='0,0,0.3,0.2,0,0,0,0'/><S T='14' X='3397' Y='40' L='10' H='76' P='0,0,0.3,0.2,0,0,0,0'/><S T='14' X='2994' Y='3' L='808' H='10' P='0,0,0.3,0.2,0,0,0,0'/></S><D><DS X='403' Y='31929'/></D><O/><L/></Z></C>"
-ui.setMapName("#dungeon \n")
+tfm.exec.newGame "<C><P MEDATA=';0,1;;;-0;0:::1-'/><Z><S><S T='6' X='400' Y='377' L='800' H='41' P='0,0,0.3,0.2,0,0,0,0'/></S><D><DS X='400' Y='342'/></D><O/><L/></Z></C>"
+
+ui.setMapName("#dungeon")
 
 local data = {}
 
 local images = {}
 
+local gameStates = {
+
+    lobby = 1,
+    dungeon = 2,
+}
+
+local currentGameState = 1
+
+local items = {
+
+    sword = {
+
+        name = "Sword",
+        index = 1,
+
+    }
+}
+
+local players = {}
+local numberOfPlayers = 0
+
+local startTimer = 10
+
+local function showPlayerList(name)
+    
+    ui.addTextArea(0, string.format("<p align='center'><font size='40'>%s / %s players</font></p>", numberOfPlayers, 10), name, 0, 50, 800, 50, nil, nil, 0.5, true)
+
+    ui.addTextArea(-1, "<p align='center'><font size='40'>" .. startTimer.. "</font></p>", name, 0, 150, 800, 50, nil, nil, 2, true)
+
+    for i = 1, 10 do
+        ui.addTextArea(i, players[i] and players[i] or string.format("<a href='event:play_%s'>enter</a>", i), name, 0 + (i - 1) * 80, 300, 60, 25, nil, nil, 0.5, true)
+    end
+
+end
+
 local function Player(name)
 
     local instance = {
         
-        health    = 100,
-        maxHealth = 100,
+        health     = 100,
+        maxHealth  = 100,
 
-        speed     = 5,
+        speed      = 5,
 
-        isDead    = false,
+        isDead     = false,
+        isPlaying  = false,
 
-        backpack  = {},
+        backpack   = {
+            items.sword
+        },
 
+        hotbar     = {}
     }
 
-    function instance:lobby()
+    instance.hotbar[1] = instance.backpack[1]
 
-        ui.addTextArea(1, "<a href='event:enterArena'><p align='center'>Arena</p></a>", name, 200, 31800, 80, 20, 0xf, 0xf, 1, false)
-        ui.addTextArea(2, "<a href='event:enterDungeon'><p align='center'>Dungeon</p></a>", name, 540, 31800, 80, 20, 0xf, 0xf, 1, false)
+    if currentGameState == gameStates.lobby then
 
-        ui.addTextArea(3, "<a href='event:leaveArena'><p align='center'>Leave</p></a>", name, 2980, 30, 80, 20, 0xf, 0xf, 1, false)
+        tfm.exec.respawnPlayer(name)
+        showPlayerList(name)
+    end
+
+    function instance:showHotbar()
+
+        ui.addTextArea(11, self.hotbar[1].name, name, 10, 345, 50, 50, nil, 0xf, 0.5, true)
+        
+        if self.hotbar[2] then
+            ui.addTextArea(12, self.hotbar[2].name, name, 75, 345, 50, 50, nil, 0xf, 0.5, true)
+        end
+        if self.hotbar[3] then
+            ui.addTextArea(13, self.hotbar[3].name, name, 140, 345, 50, 50, nil, 0xf, 0.5, true)
+        end
     end
 
     function instance:killPlayer()
@@ -66,24 +118,70 @@ end
 function eventNewPlayer(name)
 
     data[name] = data[name] or Player(name)
-    data[name]:lobby()
+    data[name]:showHotbar()
 end
 
-function enterArena(name)
+function play(name, index)
 
-    tfm.exec.movePlayer(name, 2980, 40)
-end
+    if not data[name].isPlaying then
 
-function leaveArena(name)
+        data[name].isPlaying = true
 
-    tfm.exec.movePlayer(name, 403, 31929)
+        players[index] = name
+        numberOfPlayers = numberOfPlayers + 1
+
+        ui.updateTextArea(index, string.format("<a href='event:play_%s'>%s</a>", index, name), nil)
+        ui.updateTextArea(0, string.format("<p align='center'><font size='40'>%s / %s players</font></p>", numberOfPlayers, 10), nil)
+
+    elseif data[name].isPlaying and players[index] == name then
+
+        data[name].isPlaying = false
+
+        table.remove(players, index)
+        numberOfPlayers = numberOfPlayers - 1
+
+        ui.updateTextArea(index, string.format("<a href='event:play_%s'>enter</a>", index), nil)
+        ui.updateTextArea(0, string.format("<p align='center'><font size='40'>%s / %s players</font></p>", numberOfPlayers, 10), nil)
+        
+    end
 end
 
 function eventTextAreaCallback(id, name, event)
     
-    -- _GLOBAL[event](name)
+    if event:sub(1, 5) == "play_" then
+
+        play(name, event:sub(6))
+
+        return
+    end
+
+    _G[event](name)
+end
+
+function eventLoop()
+
+    if currentGameState == gameStates.lobby then
+
+        if numberOfPlayers >= 2 then
+
+            if startTimer == 0 then
+
+                currentGameState = gameStates.dungeon
+            else
+
+                startTimer = startTimer - 0.5
+            end
+        
+        else
+
+            startTimer = 10
+        end
+
+        ui.updateTextArea(-1, "<p align='center'><font size='40'>" .. math.floor(startTimer) .. "</font></p>", nil)
+    end
 end
 
 for name in next, tfm.get.room.playerList do
     eventNewPlayer(name)
 end
+
