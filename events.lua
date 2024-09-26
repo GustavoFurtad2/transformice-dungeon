@@ -11,16 +11,20 @@ function play(name, index)
         data[name].isPlaying = true
 
         players[index] = name
-        ui.updateTextArea(index, string.format("<a href='event:play_%s'>%s</a>", index, name), nil)
+        numberOfPlayers = numberOfPlayers + 1
 
-        startTimer = os.time()
+        ui.updateTextArea(index, string.format("<a href='event:play_%s'>%s</a>", index, name), nil)
+        ui.updateTextArea(0, string.format("<p align='center'><font size='40'>%s / %s players</font></p>", numberOfPlayers, 10), nil)
 
     elseif data[name].isPlaying and players[index] == name then
 
         data[name].isPlaying = false
 
-        players[index] = nil
+        table.remove(players, index)
+        numberOfPlayers = numberOfPlayers - 1
+
         ui.updateTextArea(index, string.format("<a href='event:play_%s'>enter</a>", index), nil)
+        ui.updateTextArea(0, string.format("<p align='center'><font size='40'>%s / %s players</font></p>", numberOfPlayers, 10), nil)
         
     end
 end
@@ -39,16 +43,24 @@ end
 
 function eventLoop()
 
-    if #players >= 2 then
+    if currentGameState == gameStates.lobby then
 
-        if os.time() >= startTimer + 10000 then
+        if numberOfPlayers >= 2 then
 
-            currentGameState = gameStates.dungeon
+            if startTimer == 0 then
+
+                currentGameState = gameStates.dungeon
+            else
+
+                startTimer = startTimer - 0.5
+            end
+        
+        else
+
+            startTimer = 10
         end
-    
-    else
 
-        startTimer = os.time()
+        ui.updateTextArea(-1, "<p align='center'><font size='40'>" .. math.floor(startTimer) .. "</font></p>", nil)
     end
 end
 
