@@ -2,6 +2,8 @@ local function Player(name)
 
     local instance = {
         
+        index      = 0,
+
         health     = 100,
         maxHealth  = 100,
 
