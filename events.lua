@@ -6,21 +6,24 @@ end
 
 function play(name, index)
 
-    if not data[name].isPlaying then
+    if not data[name].isPlaying and not players[index] then
 
+        data[name].index = index
         data[name].isPlaying = true
 
         players[index] = name
+
         numberOfPlayers = numberOfPlayers + 1
 
         ui.updateTextArea(index, string.format("<a href='event:play_%s'>%s</a>", index, name), nil)
         ui.updateTextArea(0, string.format("<p align='center'><font size='40'>%s / %s players</font></p>", numberOfPlayers, 10), nil)
 
-    elseif data[name].isPlaying and players[index] == name then
+    elseif data[name].isPlaying and index == data[name].index and players[index] == name then
 
         data[name].isPlaying = false
+        
+        players[index] = nil
 
-        table.remove(players, index)
         numberOfPlayers = numberOfPlayers - 1
 
         ui.updateTextArea(index, string.format("<a href='event:play_%s'>enter</a>", index), nil)
