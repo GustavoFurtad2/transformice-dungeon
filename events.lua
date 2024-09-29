@@ -44,6 +44,11 @@ function eventTextAreaCallback(id, name, event)
     _G[event](name)
 end
 
+function eventKeyboard(name, key, down, x, y)
+
+    data[name]:keyboard(key)
+end
+
 function eventLoop()
 
     if currentGameState == gameStates.lobby then
