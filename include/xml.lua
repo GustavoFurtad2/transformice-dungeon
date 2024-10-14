@@ -21,17 +21,5 @@ function Xml:build()
 
     local mapCode = ""
 
-    return [[
-        <C>
-            <P/>
-            <Z>
-                <S>
-                </S>
-                <D>
-                </D>
-                <O>
-                </O>
-            </Z>
-        </C>
-    ]]
+    return [[<C><P/><Z><S></S><D></D><O></O></Z></C>]]
 end
