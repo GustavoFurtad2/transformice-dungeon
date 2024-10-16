@@ -1,16 +1,7 @@
-function build(files, includes)
+function build(files)
 
     local content = ""
     local build = io.open("builds/build.lua", "w")
-    
-    for k, v in next, includes do
-
-        local file = io.open("include/" .. v .. ".lua")
-        content = "-- include " .. v .. ".lua \n" .. content .. file:read("*a") .. "\n\n"
-        file:close()
-    end
-
-    content = content .. "-- end includes\n\n"
 
     for k, v in next, files do
 
@@ -23,9 +14,8 @@ function build(files, includes)
     build:write(content)
 end
 
-local includes = {"xml"}
-local files = {"init", "items", "lobby", "dungeon", "player", "events"}
+local files = {"init", "items", "xml", "lobby", "dungeon", "player", "events"}
 
-build(files, includes)
+build(files)
 
 return
