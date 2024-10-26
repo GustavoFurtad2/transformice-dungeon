@@ -5,6 +5,7 @@ function Player:new(name)
 
     local player = setmetatable(
         {
+
             index = 0,
 
             health = 100,
@@ -56,7 +57,12 @@ function Player:subHealth(health)
     end
 end
 
-function Player:showHotbar()
+function Player:setLangPath(name)
+
+    self.langPath = texts[tfm.get.room.community] or texts.en
+end
+
+function Player:showHotbar(name)
 
     ui.addTextArea(11, self.hotbar[1].name, name, 10, 345, 50, 50, nil, 0xf, 0.5, true)
         
@@ -67,6 +73,8 @@ function Player:showHotbar()
     if self.hotbar[3] then
         ui.addTextArea(13, self.hotbar[3].name, name, 140, 345, 50, 50, nil, 0xf, 0.5, true)
     end
+
+    ui.addTextArea(14, string.format("<a href='event:help'>%s</a>", self.langPath.help), name, 760, 375, 35, 20, nil, 0xf, 0.5, true)
 end
 
 function Player:keyboard(key, down, x, y)

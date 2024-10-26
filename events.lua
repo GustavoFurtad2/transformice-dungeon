@@ -1,7 +1,16 @@
 function eventNewPlayer(name)
 
-    data[name] = data[name] or Player(name)
-    data[name]:showHotbar()
+    data[name] = data[name] or Player:new(name)
+
+    data[name]:setLangPath(name)
+    data[name]:showHotbar(name)
+
+    if currentGameState == gameStates.lobby then
+
+        tfm.exec.respawnPlayer(name)
+    end
+    
+    ui.setMapName("#dungeon")
 end
 
 function play(name, index)
@@ -44,20 +53,15 @@ function eventTextAreaCallback(id, name, event)
     _G[event](name)
 end
 
-function eventKeyboard(name, key, down, x, y)
-
-    data[name]:keyboard(key)
-end
-
 function eventLoop()
 
     if currentGameState == gameStates.lobby then
 
-        if numberOfPlayers >= 2 then
+        if numberOfPlayers >= minPlayers then
 
             if startTimer == 0 then
 
-                currentGameState = gameStates.dungeon
+                startGame()
             else
 
                 startTimer = startTimer - 0.5
