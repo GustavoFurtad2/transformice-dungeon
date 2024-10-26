@@ -14,7 +14,7 @@ function build(files)
     build:write(content)
 end
 
-local files = {"init", "items", "xml", "lobby", "dungeon", "player", "events"}
+local files = {"init", "lang", "items", "xml", "lobby", "dungeon", "player", "events"}
 
 build(files)
 
