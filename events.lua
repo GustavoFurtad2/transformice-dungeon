@@ -41,16 +41,34 @@ function play(name, index)
     end
 end
 
+function help(name)
+
+    ui.removeTextArea(14, name)
+
+    ui.addTextArea(14, data[name].langPath.helpText, name, 200, 50, 400, 250, nil, 0xf, 0.5, true)
+    ui.addTextArea(15, "<a href='event:closeHelp'><R>X</R>", name, 615, 50, 20, 20, nil, 0xf, 0.5, true)
+
+end
+
+function closeHelp(name)
+    
+    ui.removeTextArea(14, name)
+    ui.removeTextArea(15, name)
+
+    ui.addTextArea(14, string.format("<a href='event:help'>%s</a>", data[name].langPath.help), name, 760, 375, 35, 20, nil, 0xf, 0.5, true)
+
+end
+
 function eventTextAreaCallback(id, name, event)
     
-    if event:sub(1, 5) == "play_" then
+    if _G[event] then
 
-        play(name, event:sub(6))
-
+        _G[event](name)
         return
     end
 
-    _G[event](name)
+    play(name, event:sub(6))
+
 end
 
 function eventLoop()
