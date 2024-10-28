@@ -13,6 +13,22 @@ function eventNewPlayer(name)
     ui.setMapName("#dungeon")
 end
 
+function eventPlayerLeft(name)
+
+    if currentGameState == gameStates.lobby and data[name].isPlaying then
+
+        data[name].isPlaying = false
+        
+        players[data[name].index] = nil
+
+        numberOfPlayers = numberOfPlayers - 1
+
+        ui.updateTextArea(data[name].index, string.format("<a href='event:play_%s'>enter</a>", data[name].index), nil)
+        ui.updateTextArea(0, string.format("<p align='center'><font size='40'>%s / %s players</font></p>", numberOfPlayers, 10), nil)
+                
+    end
+end
+
 function play(name, index)
 
     if not data[name].isPlaying and not players[index] then
@@ -69,6 +85,11 @@ function eventTextAreaCallback(id, name, event)
 
     play(name, event:sub(6))
 
+end
+
+function eventKeyboard(name, key, x, y)
+
+    data[name]:keyboard(key, false, x, y)
 end
 
 function eventLoop()
