@@ -14,14 +14,24 @@ local spawnPoints = {
 
 local function startGame()
 
-    for i = -1, 13 do
+    for i = -1, 10 do
 
         ui.removeTextArea(i, nil)
     end
 
     currentGameState = gameStates.dungeon
 
-    tfm.exec.newGame(dungeonMap)
+    local map = Xml:new()
+
+    map:setMapSize(32000, 32000)
+    
+    map:addFloor(0, 300, 250, 400, 50, 0.3, 0.2)
+
+    map:setPlayerSpawn(100, 10)
+
+    tfm.exec.newGame(map:build())
+
+    ui.setMapName("#dungeon")
 
     local index = 0
 
@@ -31,9 +41,4 @@ local function startGame()
 
         tfm.exec.movePlayer(name, spawnPoints[index].x, spawnPoints[index].y)
     end
-end
-
-function genMap()
-
-    
 end
