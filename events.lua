@@ -71,7 +71,7 @@ function closeHelp(name)
     ui.removeTextArea(14, name)
     ui.removeTextArea(15, name)
 
-    ui.addTextArea(14, string.format("<a href='event:help'>%s</a>", data[name].langPath.help), name, 760, 375, 35, 20, nil, 0xf, 0.5, true)
+    ui.addTextArea(14, string.format("<a href='event:help'>%s</a>", data[name].langPath.help), name, 760, 120, 35, 20, nil, 0xf, 0.5, true)
 
 end
 
