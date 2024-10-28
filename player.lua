@@ -19,12 +19,12 @@ function Player:new(name)
             currentHotbar = 1,
 
             hotbar = {},
-            backpack = {items.sword},
+            backpack = {items.sword, items.excalibur},
         },
     Player)
 
     player.hotbar[1] = player.backpack[1]
-    player.hotbar[2] = player.backpack[1]
+    player.hotbar[2] = player.backpack[2]
 
     if currentGameState == gameStates.lobby then
 
@@ -34,6 +34,11 @@ function Player:new(name)
 
     tfm.exec.bindKeyboard(name, string.byte("1"), true, true)
     tfm.exec.bindKeyboard(name, string.byte("2"), true, true)
+
+    for i, skill in next, player.hotbar[1].skills do
+
+        ui.addTextArea(14 + i, string.format("<A:ACTIVE>[</A:ACTIVE>%s<A:ACTIVE>]</A:ACTIVE> <p align='right'>%s</p>", skill.key, skill.name), name, 690, 350 + (i - 1) * -40, 105, 25, nil, 0xf, 0.5, true)
+    end
 
     return player
 end
@@ -80,13 +85,23 @@ function Player:showHotbar(name)
         ui.addTextArea(13, "3", name, 140, 345, 50, 50, nil, 0xf, 0.5, true)
     end
 
-    ui.addTextArea(14, string.format("<a href='event:help'>%s</a>", self.langPath.help), name, 760, 375, 35, 20, nil, 0xf, 0.5, true)
+    ui.addTextArea(14, string.format("<a href='event:help'>%s</a>", self.langPath.help), name, 760, 120, 35, 20, nil, 0xf, 0.5, true)
 end
 
 function Player:updateHotbar(name, hotbarNumber)
 
     ui.updateTextArea(10 + self.currentHotbar, self.currentHotbar, name)
     ui.updateTextArea(10 + hotbarNumber, "<A:ACTIVE>" .. hotbarNumber .. "</A:ACTIVE>", name)
+
+    for i, skill in next, self.hotbar[self.currentHotbar].skills do
+
+        ui.removeTextArea(14 + i, name)
+    end
+
+    for i, skill in next, self.hotbar[hotbarNumber].skills do
+
+        ui.addTextArea(14 + i, string.format("<A:ACTIVE>[</A:ACTIVE>%s<A:ACTIVE>]</A:ACTIVE> <p align='right'>%s</p>", skill.key, skill.name), name, 690, 350 + (i - 1) * -40, 105, 25, nil, 0xf, 0.5, true)
+    end
 
     self.currentHotbar = hotbarNumber
 end
