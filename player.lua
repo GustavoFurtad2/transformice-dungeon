@@ -38,6 +38,7 @@ function Player:new(name)
     for i, skill in next, player.hotbar[1].skills do
 
         ui.addTextArea(14 + i, string.format("<A:ACTIVE>[</A:ACTIVE>%s<A:ACTIVE>]</A:ACTIVE> <p align='right'>%s</p>", skill.key, skill.name), name, 690, 350 + (i - 1) * -40, 105, 25, nil, 0xf, 0.5, true)
+        tfm.exec.bindKeyboard(name, string.byte(skill.key), true, true)
     end
 
     return player
@@ -75,14 +76,14 @@ end
 
 function Player:showHotbar(name)
 
-    ui.addTextArea(11, "<A:ACTIVE>1</A:ACTIVE>", name, 10, 345, 50, 50, nil, 0xf, 0.5, true)
+    ui.addTextArea(11, "<A:ACTIVE>1</A:ACTIVE>\n" .. self.hotbar[1].name, name, 10, 345, 50, 50, nil, 0xf, 0.5, true)
         
     if self.hotbar[2] then
-        ui.addTextArea(12, "2", name, 75, 345, 50, 50, nil, 0xf, 0.5, true)
+        ui.addTextArea(12, "2\n" .. self.hotbar[2].name, name, 75, 345, 50, 50, nil, 0xf, 0.5, true)
     end
         
     if self.hotbar[3] then
-        ui.addTextArea(13, "3", name, 140, 345, 50, 50, nil, 0xf, 0.5, true)
+        ui.addTextArea(13, "3\n" .. self.hotbar[3].name, name, 140, 345, 50, 50, nil, 0xf, 0.5, true)
     end
 
     ui.addTextArea(14, string.format("<a href='event:help'>%s</a>", self.langPath.help), name, 760, 120, 35, 20, nil, 0xf, 0.5, true)
@@ -90,17 +91,19 @@ end
 
 function Player:updateHotbar(name, hotbarNumber)
 
-    ui.updateTextArea(10 + self.currentHotbar, self.currentHotbar, name)
-    ui.updateTextArea(10 + hotbarNumber, "<A:ACTIVE>" .. hotbarNumber .. "</A:ACTIVE>", name)
+    ui.updateTextArea(10 + self.currentHotbar, self.currentHotbar .. "\n" .. self.hotbar[self.currentHotbar].name, name)
+    ui.updateTextArea(10 + hotbarNumber, "<A:ACTIVE>" .. hotbarNumber .. "</A:ACTIVE>\n" .. self.hotbar[hotbarNumber].name, name)
 
     for i, skill in next, self.hotbar[self.currentHotbar].skills do
 
         ui.removeTextArea(14 + i, name)
+        tfm.exec.bindKeyboard(name, string.byte(skill.key), false, true)
     end
 
     for i, skill in next, self.hotbar[hotbarNumber].skills do
 
         ui.addTextArea(14 + i, string.format("<A:ACTIVE>[</A:ACTIVE>%s<A:ACTIVE>]</A:ACTIVE> <p align='right'>%s</p>", skill.key, skill.name), name, 690, 350 + (i - 1) * -40, 105, 25, nil, 0xf, 0.5, true)
+        tfm.exec.bindKeyboard(name, string.byte(skill.key), true, true)
     end
 
     self.currentHotbar = hotbarNumber
