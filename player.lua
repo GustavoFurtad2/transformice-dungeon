@@ -71,41 +71,41 @@ function Player:subHealth(health)
     end
 end
 
-function Player:setLangPath(name)
+function Player:setLangPath()
 
     self.langPath = texts[tfm.get.room.community] or texts.en
 end
 
-function Player:showHotbar(name)
+function Player:showHotbar()
 
-    ui.addTextArea(11, "<A:ACTIVE>1</A:ACTIVE>\n" .. self.hotbar[1].name, name, 10, 345, 50, 50, nil, 0xf, 0.5, true)
+    ui.addTextArea(11, "<A:ACTIVE>1</A:ACTIVE>\n" .. self.hotbar[1].name, self.name, 10, 345, 50, 50, nil, 0xf, 0.5, true)
         
     if self.hotbar[2] then
-        ui.addTextArea(12, "2\n" .. self.hotbar[2].name, name, 75, 345, 50, 50, nil, 0xf, 0.5, true)
+        ui.addTextArea(12, "2\n" .. self.hotbar[2].name, self.name, 75, 345, 50, 50, nil, 0xf, 0.5, true)
     end
         
     if self.hotbar[3] then
-        ui.addTextArea(13, "3\n" .. self.hotbar[3].name, name, 140, 345, 50, 50, nil, 0xf, 0.5, true)
+        ui.addTextArea(13, "3\n" .. self.hotbar[3].name, self.name, 140, 345, 50, 50, nil, 0xf, 0.5, true)
     end
 
-    ui.addTextArea(14, string.format("<a href='event:help'>%s</a>", self.langPath.help), name, 760, 120, 35, 20, nil, 0xf, 0.5, true)
+    ui.addTextArea(20, string.format("<a href='event:help'>%s</a>", self.langPath.help), name, 760, 120, 35, 20, nil, 0xf, 0.5, true)
 end
 
-function Player:updateHotbar(name, hotbarNumber)
+function Player:updateHotbar(hotbarNumber)
 
-    ui.updateTextArea(10 + self.currentHotbar, self.currentHotbar .. "\n" .. self.hotbar[self.currentHotbar].name, name)
-    ui.updateTextArea(10 + hotbarNumber, "<A:ACTIVE>" .. hotbarNumber .. "</A:ACTIVE>\n" .. self.hotbar[hotbarNumber].name, name)
+    ui.updateTextArea(10 + self.currentHotbar, self.currentHotbar .. "\n" .. self.hotbar[self.currentHotbar].name, self.name)
+    ui.updateTextArea(10 + hotbarNumber, "<A:ACTIVE>" .. hotbarNumber .. "</A:ACTIVE>\n" .. self.hotbar[hotbarNumber].name, self.name)
 
     for i, skill in next, self.hotbar[self.currentHotbar].skills do
 
-        ui.removeTextArea(14 + i, name)
-        tfm.exec.bindKeyboard(name, string.byte(skill.key), false, true)
+        ui.removeTextArea(14 + i, self.name)
+        tfm.exec.bindKeyboard(self.name, string.byte(skill.key), false, true)
     end
 
     for i, skill in next, self.hotbar[hotbarNumber].skills do
 
-        ui.addTextArea(14 + i, string.format("<A:ACTIVE>[</A:ACTIVE>%s<A:ACTIVE>]</A:ACTIVE> <p align='right'>%s</p>", skill.key, skill.name), name, 690, 350 + (i - 1) * -40, 105, 25, nil, 0xf, 0.5, true)
-        tfm.exec.bindKeyboard(name, string.byte(skill.key), true, true)
+        ui.addTextArea(14 + i, string.format("<A:ACTIVE>[</A:ACTIVE>%s<A:ACTIVE>]</A:ACTIVE> <p align='right'>%s</p>", skill.key, skill.name), self.name, 690, 350 + (i - 1) * -40, 105, 25, nil, 0xf, 0.5, true)
+        tfm.exec.bindKeyboard(self.name, string.byte(skill.key), true, true)
     end
 
     self.currentHotbar = hotbarNumber
@@ -117,21 +117,21 @@ function Player:keyboard(key, down, x, y)
         
         if "1" ~= self.currentHotbar then
 
-            self:updateHotbar(name, 1)
+            self:updateHotbar(1)
         end
 
     elseif key == string.byte("2") then
 
         if "2" ~= self.currentHotbar then
 
-            self:updateHotbar(name, 2)
+            self:updateHotbar(2)
         end
 
     elseif key == string.byte("3") then
 
         if "3" ~= self.currentHotbar then
 
-            self:updateHotbar(name, 3)
+            self:updateHotbar(3)
         end
     
     else
@@ -143,7 +143,7 @@ function Player:keyboard(key, down, x, y)
                 if string.byte(skill.key) == key then
 
                     if checkPlayerNearby(skill.range, self.name) then
-                        skill.use(name)
+                        skill.use(self.name)
                     end
                     
                     break
