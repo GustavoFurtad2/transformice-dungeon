@@ -6,6 +6,8 @@ function Player:new(name)
     local player = setmetatable(
         {
 
+            name = name,
+
             index = 0,
 
             health = 100,
@@ -131,5 +133,23 @@ function Player:keyboard(key, down, x, y)
 
             self:updateHotbar(name, 3)
         end
+    
+    else
+
+        if currentGameState == gameStates.dungeon then
+
+            for i, skill in next, self.hotbar[self.currentHotbar].skills do
+
+                if string.byte(skill.key) == key then
+
+                    if checkPlayerNearby(skill.range, self.name) then
+                        skill.use(name)
+                    end
+                    
+                    break
+                end
+            end
+        end
+
     end
 end
