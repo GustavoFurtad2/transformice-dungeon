@@ -2,8 +2,8 @@ function eventNewPlayer(name)
 
     data[name] = data[name] or Player:new(name)
 
-    data[name]:setLangPath(name)
-    data[name]:showHotbar(name)
+    data[name]:setLangPath()
+    data[name]:showHotbar()
 
     if currentGameState == gameStates.lobby then
 
@@ -59,19 +59,16 @@ end
 
 function help(name)
 
-    ui.removeTextArea(14, name)
-
-    ui.addTextArea(14, data[name].langPath.helpText, name, 200, 50, 400, 250, nil, 0xf, 0.5, true)
-    ui.addTextArea(15, "<a href='event:closeHelp'><R>X</R>", name, 615, 50, 20, 20, nil, 0xf, 0.5, true)
+    ui.addTextArea(20, data[name].langPath.helpText, name, 200, 50, 400, 250, nil, 0xf, 0.5, true)
+    ui.addTextArea(21, "<a href='event:closeHelp'><R>X</R>", name, 615, 50, 20, 20, nil, 0xf, 0.5, true)
 
 end
 
 function closeHelp(name)
     
-    ui.removeTextArea(14, name)
-    ui.removeTextArea(15, name)
+    ui.removeTextArea(21, name)
 
-    ui.addTextArea(14, string.format("<a href='event:help'>%s</a>", data[name].langPath.help), name, 760, 120, 35, 20, nil, 0xf, 0.5, true)
+    ui.addTextArea(20, string.format("<a href='event:help'>%s</a>", data[name].langPath.help), name, 760, 120, 35, 20, nil, 0xf, 0.5, true)
 
 end
 
