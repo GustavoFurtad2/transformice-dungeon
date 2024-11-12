@@ -23,6 +23,14 @@ local items = {
                 damage = 3,
                 cooldownTime = 2,
 
+                range = 50,
+
+                lastAttack,
+
+                use = function(name)
+
+                end
+
             },
 
             [2] = {
@@ -32,6 +40,15 @@ local items = {
                 key = "Z",
                 damage = 7,
                 cooldownTime = 6,
+
+                range = 80,
+
+                lastAttack,
+
+                use = function(name)
+
+                end
+                
             }
         },
     },
@@ -53,9 +70,11 @@ local items = {
                 damage = 7,
                 cooldownTime = 3,
 
+                range = 70,
+
                 lastAttack,
 
-                use = function()
+                use = function(name)
 
                 end
 
@@ -69,9 +88,11 @@ local items = {
                 damage = 14,
                 cooldownTime = 7,
 
+                range = 80,
+
                 lastAttack,
 
-                use = function()
+                use = function(name)
 
                 end
                 
