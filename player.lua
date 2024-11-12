@@ -142,8 +142,10 @@ function Player:keyboard(key, down, x, y)
 
                 if string.byte(skill.key) == key then
 
-                    if checkPlayerNearby(skill.range, self.name) then
-                        skill.use(self.name)
+                    local playerNearby = checkPlayerNearby(skill.range, self.name)
+
+                    if playerNearby then
+                        skill.use(self.name, playerNearby)
                     end
                     
                     break
