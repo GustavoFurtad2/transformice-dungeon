@@ -18,5 +18,5 @@ local gameStates = {
     dungeon = 2,
 }
 
-local minPlayers = 1
+local minPlayers = 2
 local currentGameState = 1
