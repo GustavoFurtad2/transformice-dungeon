@@ -111,6 +111,23 @@ function Player:updateHotbar(hotbarNumber)
     self.currentHotbar = hotbarNumber
 end
 
+function Player:useSkill()
+    
+    for i, skill in next, self.hotbar[self.currentHotbar].skills do
+
+        if string.byte(skill.key) == key then
+
+            local playerNearby = checkPlayerNearby(skill.range, self.name)
+
+            if playerNearby then
+                skill.use(self.name, playerNearby)
+            end
+            
+            break
+        end
+    end
+end
+
 function Player:keyboard(key, down, x, y)
 
     if key == string.byte("1") then
@@ -138,19 +155,7 @@ function Player:keyboard(key, down, x, y)
 
         if currentGameState == gameStates.dungeon then
 
-            for i, skill in next, self.hotbar[self.currentHotbar].skills do
-
-                if string.byte(skill.key) == key then
-
-                    local playerNearby = checkPlayerNearby(skill.range, self.name)
-
-                    if playerNearby then
-                        skill.use(self.name, playerNearby)
-                    end
-                    
-                    break
-                end
-            end
+            self.useSkill()
         end
 
     end
