@@ -41,7 +41,7 @@ function play(name, index)
         numberOfPlayers = numberOfPlayers + 1
 
         ui.updateTextArea(index, string.format("<a href='event:play_%s'>%s</a>", index, name), nil)
-        ui.updateTextArea(0, string.format("<p align='center'><font size='40'>%s / %s players</font></p>", numberOfPlayers, 10), nil)
+        ui.updateTextArea(0, string.format("<p align='center'><font size='40'>%s / %s players</font></p>", numberOfPlayers, 6), nil)
 
     elseif data[name].isPlaying and index == data[name].index and players[index] == name then
 
@@ -52,7 +52,7 @@ function play(name, index)
         numberOfPlayers = numberOfPlayers - 1
 
         ui.updateTextArea(index, string.format("<a href='event:play_%s'>enter</a>", index), nil)
-        ui.updateTextArea(0, string.format("<p align='center'><font size='40'>%s / %s players</font></p>", numberOfPlayers, 10), nil)
+        ui.updateTextArea(0, string.format("<p align='center'><font size='40'>%s / %s players</font></p>", numberOfPlayers, 6), nil)
         
     end
 end
