@@ -27,6 +27,8 @@ local items = {
 
                 lastAttack,
 
+                players = {},
+
                 use = function(name)
 
                 end
@@ -44,6 +46,8 @@ local items = {
                 range = 80,
 
                 lastAttack,
+
+                players = {},
 
                 use = function(name)
 
@@ -74,6 +78,8 @@ local items = {
 
                 lastAttack,
 
+                players = {},
+
                 use = function(name)
 
                 end
@@ -91,6 +97,8 @@ local items = {
                 range = 80,
 
                 lastAttack,
+
+                players = {},
 
                 use = function(name)
 

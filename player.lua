@@ -41,6 +41,8 @@ function Player:new(name)
 
         ui.addTextArea(14 + i, string.format("<A:ACTIVE>[</A:ACTIVE>%s<A:ACTIVE>]</A:ACTIVE> <p align='right'>%s</p>", skill.key, skill.name), name, 690, 350 + (i - 1) * -40, 105, 25, nil, 0xf, 0.5, true)
         tfm.exec.bindKeyboard(name, string.byte(skill.key), true, true)
+
+        skill.players[name] = {timer = 0}
     end
 
     return player
@@ -112,18 +114,25 @@ function Player:updateHotbar(hotbarNumber)
 end
 
 function Player:useSkill()
+
+    local currentTime = os.time()
     
     for i, skill in next, self.hotbar[self.currentHotbar].skills do
 
         if string.byte(skill.key) == key then
 
-            local playerNearby = checkPlayerNearby(skill.range, self.name)
+            if currentTime >= skill.players[self.name].timer then
 
-            if playerNearby then
-                skill.use(self.name, playerNearby)
+                local playerNearby = checkPlayerNearby(skill.range, self.name)
+
+                if playerNearby then
+                    
+                    skill.use(self.name, playerNearby)
+                    skill.players[self.name].timer = currentTime + skill.cooldownTime * 1000
+                end
+                
+                break
             end
-            
-            break
         end
     end
 end
@@ -132,21 +141,21 @@ function Player:keyboard(key, down, x, y)
 
     if key == string.byte("1") then
         
-        if "1" ~= self.currentHotbar then
+        if self.currentHotbar ~= "1" then
 
             self:updateHotbar(1)
         end
 
     elseif key == string.byte("2") then
 
-        if "2" ~= self.currentHotbar then
+        if self.currentHotbar ~= "2" then
 
             self:updateHotbar(2)
         end
 
     elseif key == string.byte("3") then
 
-        if "3" ~= self.currentHotbar then
+        if self.currentHotbar ~= "3" then
 
             self:updateHotbar(3)
         end
