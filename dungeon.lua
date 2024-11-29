@@ -33,12 +33,11 @@ local function startGame()
 
     ui.setMapName("#dungeon")
 
-    local index = 0
+    for name in next, tfm.get.room.playerList do
 
-    for name in next, players do
+        if not data[name].isPlaying then
 
-        index = index + 1
-
-        tfm.exec.movePlayer(name, spawnPoints[index].x, spawnPoints[index].y)
+            tfm.exec.killPlayer(name)
+        end
     end
 end
